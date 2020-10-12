@@ -7,6 +7,11 @@ target/*
 state.xml
 org.eclipse.jdt.annotation_2.2.300.v20190328-1431.jar
 /target/
+.classpath
+.gradle/*
+.project
+texture.png
+themes/*
 
 # Compiled class file
 *.class

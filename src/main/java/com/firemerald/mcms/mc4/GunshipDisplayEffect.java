@@ -1,12 +1,14 @@
 package com.firemerald.mcms.mc4;
 
 import org.eclipse.jdt.annotation.Nullable;
+import org.joml.Matrix4d;
 
 import firemerald.mcms.Main;
 import firemerald.mcms.Project;
 import firemerald.mcms.api.data.AbstractElement;
 import firemerald.mcms.api.model.IEditableParent;
 import firemerald.mcms.api.model.IModelEditable;
+import firemerald.mcms.api.model.IModelHolder;
 import firemerald.mcms.api.model.IRigged;
 import firemerald.mcms.api.model.RenderBone;
 import firemerald.mcms.api.model.effects.BoneEffect;
@@ -15,7 +17,7 @@ import firemerald.mcms.gui.components.ComponentFloatingLabel;
 import firemerald.mcms.gui.components.SelectorButton;
 import firemerald.mcms.gui.components.text.ComponentText;
 import firemerald.mcms.model.EditorPanes;
-import firemerald.mcms.texture.Texture;
+import firemerald.mcms.texture.space.Material;
 import firemerald.mcms.util.GuiUpdate;
 import firemerald.mcms.util.MiscUtil;
 import firemerald.mcms.util.ResourceLocation;
@@ -24,14 +26,14 @@ public class GunshipDisplayEffect extends BoneEffect
 {
 	public static final ResourceLocation DISPLAY_TEX = new ResourceLocation(MC4Plugin.ID, "display.png");
 	public String id;
-	public Texture texture;
+	public Material texture;
 
 	public GunshipDisplayEffect(String name, @Nullable RenderBone<?> parent)
 	{
 		this(name, parent, null, "undefined");
 	}
 	
-	public GunshipDisplayEffect(String name, @Nullable RenderBone<?> parent, Texture texture, String id)
+	public GunshipDisplayEffect(String name, @Nullable RenderBone<?> parent, Material texture, String id)
 	{
 		super(name, parent);
 		this.texture = texture;
@@ -53,17 +55,17 @@ public class GunshipDisplayEffect extends BoneEffect
 	}
 
 	@Override
-	public void doPreRender(Runnable defaultTex)
+	public void doPreRender(IModelHolder holder, Matrix4d currentTransform, Runnable defaultTex)
 	{
 		if (texture == null) Main.instance.textureManager.unbindTexture();
-		else texture.bind();
+		else Main.instance.currentModelShader.bindMaterial(texture);
 	}
 
 	@Override
-	public void doPostRenderBone(Runnable defaultTex) {}
+	public void doPostRenderBone(IModelHolder holder, Matrix4d currentTransform, Runnable defaultTex) {}
 
 	@Override
-	public void doPostRenderChildren(Runnable defaultTex)
+	public void doPostRenderChildren(IModelHolder holder, Matrix4d currentTransform, Runnable defaultTex)
 	{
 		defaultTex.run();
 	}
@@ -166,7 +168,7 @@ public class GunshipDisplayEffect extends BoneEffect
 	}
 	
 	@Override
-	public @Nullable Texture getTexture(Texture prev)
+	public @Nullable Material getTexture(Material prev)
 	{
 		return texture;
 	}

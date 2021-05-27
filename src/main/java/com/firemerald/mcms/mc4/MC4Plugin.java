@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import firemerald.mcms.api.model.effects.BoneEffect;
+import firemerald.mcms.api.model.effects.EffectRenderStage;
 import firemerald.mcms.events.ApplicationEvent;
 import firemerald.mcms.events.EventHandler;
 import firemerald.mcms.plugin.Plugin;
@@ -24,8 +25,13 @@ public class MC4Plugin
 	public void onEvent(ApplicationEvent.Initialization event)
 	{
 		//register bone effects
-		BoneEffect.registerBoneType(new ResourceLocation(ID, "display"), "gunship display", GunshipDisplayEffect.DISPLAY_TEX, bone -> new GuiPopupEffectDisplay(bone).activate(), (bone, el, scale) -> {
+		BoneEffect.registerBoneEffect(new ResourceLocation(ID, "display"), "gunship display", GunshipDisplayEffect.DISPLAY_TEX, bone -> new GuiPopupGunshipDisplayEffect(bone).activate(), (bone, el, scale) -> {
 			GunshipDisplayEffect effect = new GunshipDisplayEffect(el.getString("name", "unnamed item"), bone);
+			effect.loadFromXML(el, scale);
+			return effect;
+		});
+		BoneEffect.registerBoneEffect(new ResourceLocation(ID, "assembly_terminal"), "assembly input", AssemblyTerminalEffect.DISPLAY_TEX, bone -> new GuiPopupAssemblyTerminalEffect(bone).activate(), (bone, el, scale) -> {
+			AssemblyTerminalEffect effect = new AssemblyTerminalEffect(el.getString("name", "unnamed item"), bone, EffectRenderStage.POST_CHILDREN);
 			effect.loadFromXML(el, scale);
 			return effect;
 		});
